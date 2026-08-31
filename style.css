@@ -1,0 +1,57 @@
+
+body {
+    background-color: rgb(24, 55, 25);
+    margin: 0;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h1 {
+    color: rgb(84, 241, 84);
+    font-size: 40px;
+    text-shadow: 0 0 20px rgb(95, 249, 95);
+    text-align: center;
+}
+
+h2 {
+    margin: 10px;
+    text-shadow: 0 0 20px rgb(160, 244, 42);
+    color: white;
+}
+
+
+canvas {
+    background-color: rgb(12, 27, 22);
+    border: 2px solid rgb(0, 147, 81);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgb(0, 147, 81);
+}
+
+span {
+    color: rgb(84, 246, 154);
+    text-shadow: 0 0 20px rgb(160, 244, 42);
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    width: 600px;
+
+}
+
+.points {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.scores {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+
