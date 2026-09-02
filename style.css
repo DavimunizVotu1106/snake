@@ -54,4 +54,8 @@ span {
     margin-bottom: 20px;
 }
 
+#gameOverScreen {
+    display: none;
+}
+
 

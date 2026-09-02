@@ -1,5 +1,8 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+const scoreElement = document.getElementById("score");
+const gamerOverScreen = document.getElementById("gameOverScreen");
+const finalScore = document.getElementById("finalScore");
 const snake = [
     { x: 290, y: 290 },
     { x: 270, y: 290 }
@@ -21,8 +24,12 @@ for (let i = 0; i < snake.length; i++) {
 
 let direction = "right";
 
+let score = 0;
 
-setInterval(() => {
+let gameOver = false;
+
+
+const gameLoop = setInterval(() => {
     
     ctx.clearRect(0, 0, 600, 600);
     ctx.fillStyle = "red";
@@ -30,9 +37,10 @@ setInterval(() => {
 
     ctx.fillStyle = "#39ff14";
     
-
-    const oldHeadX = snake[0].x;
-    const oldHeadY = snake[0].y;
+    for (let i = snake.length - 1; i > 0; i--) {
+        snake[i].x = snake[i - 1].x;
+        snake[i].y = snake[i - 1].y;
+    }
 
     if (direction === "up") {
 
@@ -59,13 +67,37 @@ setInterval(() => {
     }
 
     if (snake[0].x === food.x && snake[0].y === food.y) {
+        score++;
+        scoreElement.textContent = score;
+        snake.push({});
+
         food.x = Math.floor(Math.random() * 60) * 10;
         food.y = Math.floor(Math.random() * 60) * 10;
     }
 
 
-    snake[1].x = oldHeadX;
-    snake[1].y = oldHeadY;
+    if (
+        snake[0].x < 0 ||
+        snake[0].x >= 600 ||
+        snake[0].y < 0 ||
+        snake[0].y >= 600
+    ) {
+        gameOver = true;
+        clearInterval(gameLoop);
+
+        gamerOverScreen.style.display = "block";
+        finalScore.textContent = score;
+    }
+
+    for (let i = 1; i < snake.length; i++) {
+        if (snake[0].x === snake[i].x && snake[0].y === snake[i].y) {
+            gameOver = true;
+            clearInterval(gameLoop);
+            
+            gamerOverScreen.style.display = "block";
+            finalScore.textContent = score;
+        }
+    }
 
     for (let i = 0; i < snake.length; i++) {
 
@@ -77,17 +109,22 @@ setInterval(() => {
 
 document.addEventListener("keydown", (event)=>{
 
-     if (event.key === "ArrowUp") {
+     if (event.key === "ArrowUp" && direction !== "down") {
         direction = "up";
      }
-     if (event.key === "ArrowDown") {
+     if (event.key === "ArrowDown" && direction !== "up") {
         direction = "down";
      }
-     if (event.key === "ArrowRight") {
+     if (event.key === "ArrowRight" && direction !== "left") {
         direction = "right";
      }
-     if (event.key === "ArrowLeft") {
+     if (event.key === "ArrowLeft" && direction !== "right") {
         direction = "left";
      }
 
+});
+
+const restartButton = document.getElementById("restartButton");
+restartButton.addEventListener("click", ()=>{
+    location.reload();
 });
