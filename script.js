@@ -1,6 +1,7 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const scoreElement = document.getElementById("score");
+const highScoreElement = document.getElementById("highScore");
 const gamerOverScreen = document.getElementById("gameOverScreen");
 const finalScore = document.getElementById("finalScore");
 const snake = [
@@ -11,6 +12,33 @@ const food = {
     x: 400,
     y: 300
 };
+
+function generateFood() {
+    food.x = Math.floor(Math.random() * 60) * 10;
+    food.y = Math.floor(Math.random() * 60) * 10;
+    let onSnake = false;
+
+    for (let i = 0; i < snake.length; i++) {
+        if (snake[i].x === food.x && snake[i].y === food.y) {
+            onSnake = true;
+        }
+    }
+
+    while (onSnake) {
+        food.x = Math.floor(Math.random() * 60) * 10;
+        food.y = Math.floor(Math.random() * 60) * 10;
+
+        onSnake = false;
+
+        for (let i = 0; i < snake.length; i++) {
+            if (snake[i].x === food.x && snake[i].y === food.y) {
+                onSnake = true;
+            }
+        }
+    }
+}
+
+generateFood();
 
 ctx.shadowColor = "#39ff14";
 ctx.shadowBlur = 10;
@@ -26,15 +54,25 @@ let direction = "right";
 
 let score = 0;
 
+let highScore = 0;
+
+highScore = localStorage.getItem("highScore") || 0;
+
+highScoreElement.textContent = highScore;
+
 let gameOver = false;
 
 
 const gameLoop = setInterval(() => {
     
     ctx.clearRect(0, 0, 600, 600);
+    ctx.shadowColor = "red";
+    ctx.shadowBlur = 15;
     ctx.fillStyle = "red";
     ctx.fillRect(food.x, food.y, 20, 20);
 
+    ctx.shadowColor = "#39ff14";
+    ctx.shadowBlur = 10;
     ctx.fillStyle = "#39ff14";
     
     for (let i = snake.length - 1; i > 0; i--) {
@@ -69,10 +107,16 @@ const gameLoop = setInterval(() => {
     if (snake[0].x === food.x && snake[0].y === food.y) {
         score++;
         scoreElement.textContent = score;
+        
+
+    if  (score > highScore) {
+        highScore = score;
+        highScoreElement.textContent = highScore;
+        localStorage.setItem("highScore", highScore);
+        }
         snake.push({});
 
-        food.x = Math.floor(Math.random() * 60) * 10;
-        food.y = Math.floor(Math.random() * 60) * 10;
+        generateFood();
     }
 
 
