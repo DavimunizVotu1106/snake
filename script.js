@@ -54,6 +54,8 @@ let direction = "right";
 
 let score = 0;
 
+let gameSpeed = 100;
+
 let highScore = 0;
 
 highScore = localStorage.getItem("highScore") || 0;
@@ -63,7 +65,10 @@ highScoreElement.textContent = highScore;
 let gameOver = false;
 
 
-const gameLoop = setInterval(() => {
+let gameLoop;
+
+    function startGame() {
+        gameLoop = setInterval(() => {
     
     ctx.clearRect(0, 0, 600, 600);
     ctx.shadowColor = "red";
@@ -107,6 +112,14 @@ const gameLoop = setInterval(() => {
     if (snake[0].x === food.x && snake[0].y === food.y) {
         score++;
         scoreElement.textContent = score;
+
+    if (score % 5 === 0) {
+        gameSpeed = Math.max(50, gameSpeed - 10);
+        clearInterval(gameLoop);
+        startGame();
+    }
+
+    
         
 
     if  (score > highScore) {
@@ -114,7 +127,12 @@ const gameLoop = setInterval(() => {
         highScoreElement.textContent = highScore;
         localStorage.setItem("highScore", highScore);
         }
-        snake.push({});
+        const tail = snake[snake.length - 1];
+
+        snake.push({
+            x: tail.x,
+            y: tail.y
+        });
 
         generateFood();
     }
@@ -149,7 +167,9 @@ const gameLoop = setInterval(() => {
 
     }
 
-}, 100);
+}, gameSpeed);
+}
+
 
 document.addEventListener("keydown", (event)=>{
 
@@ -169,6 +189,14 @@ document.addEventListener("keydown", (event)=>{
 });
 
 const restartButton = document.getElementById("restartButton");
+const startButton = document.getElementById("startButton");
+const startScreen = document.getElementById("startScreen");
+
+startButton.addEventListener("click", ()=>{
+    startScreen.style.display = "none";
+    startGame();
+});
+
 restartButton.addEventListener("click", ()=>{
     location.reload();
 });
